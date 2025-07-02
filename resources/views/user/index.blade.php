@@ -141,9 +141,9 @@
         .user-profile {
             display: flex;
             align-items: center;
-            padding: 15px 10px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 30px;
+            padding: 0;
+            border-top: none;
+            margin-top: 0;
         }
 
         .user-profile img {
@@ -154,13 +154,48 @@
             margin: 0;
             font-size: 16px;
             font-weight: 600;
-            color: #FFFFFF; /* Changed to white */
+            color: var(--text-dark); /* Changed to dark text */
         }
 
         .user-profile .user-info p {
             margin: 0;
             font-size: 13px;
-            color: #FFFFFF; /* Changed to white */
+            color: var(--text-light); /* Changed to light text */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            width: 100%; /* Ensure header takes full width */
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Space between elements in header right */
+        }
+
+        .logout-button-container form {
+            margin-top: 0; /* Remove top margin */
+            padding-bottom: 0; /* Remove bottom padding */
+        }
+
+        .logout-button-container .btn {
+            padding: 8px 15px; /* Adjust padding for a smaller button */
+            font-size: 14px; /* Adjust font size */
+            border-radius: 5px; /* Adjust border radius */
+            background-color: var(--primary-color); /* Use primary color */
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition */
+        }
+
+        .logout-button-container .btn:hover {
+            background-color: #E65A5A; /* Slightly darker primary color on hover */
         }
 
         .main-content {
@@ -370,29 +405,38 @@
                 <h4>The Design of Everyday Things</h4>
             </div>
         </div>
-        <div class="user-profile">
-            <img src="https://via.placeholder.com/45" alt="User Avatar">
-            <div class="user-info">
-                @auth
-                    <h5>{{ Auth::user()->name }}</h5>
-                    <p>Premium User</p>
-                @else
-                    <h5>Guest</h5>
-                    <p>Please log in</p>
-                @endauth
-            </div>
-        </div>
-        @guest
-            <div class="login-button-container" style="margin-top: auto; padding-bottom: 20px;">
-                <a href="{{ route('login') }}" class="btn btn-primary" style="display: block; width: 100%; text-align: center; padding: 10px; background-color: var(--primary-color); color: white; border-radius: 8px; text-decoration: none;">Login</a>
-            </div>
-        @endguest
     </div>
     <div class="main-content">
         <div class="header">
             <div class="search-bar">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
                 <input type="text" placeholder="Search in My library">
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <img src="https://via.placeholder.com/45" alt="User Avatar">
+                    <div class="user-info">
+                        @auth
+                            <h5>{{ Auth::user()->name }}</h5>
+                            <p>Welcome!r</p>
+                        @else
+                            <h5>Guest</h5>
+                            <p>Please log in</p>
+                        @endauth
+                    </div>
+                </div>
+                @guest
+                    <div class="login-button-container">
+                        <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
+                    </div>
+                @else
+                    <div class="logout-button-container">
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary">Logout</button>
+                        </form>
+                    </div>
+                @endguest
             </div>
         </div>
 

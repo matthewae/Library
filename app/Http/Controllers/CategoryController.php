@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return response()->json($categories);
+        return view('admin.categories', compact('categories'));
     }
 
     /**
@@ -33,7 +33,7 @@ class CategoryController extends Controller
             'description' => $request->description,
         ]);
 
-        return response()->json($category, 201);
+        return redirect()->route('admin.categories.index')->with('success', 'Category added successfully!');
     }
 
     /**
@@ -42,6 +42,14 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         return response()->json($category);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Category $category)
+    {
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -69,6 +77,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return response()->json(null, 204);
+        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully!');
     }
 }

@@ -14,6 +14,15 @@
         </ol>
     </nav>
 
+    <ul class="list-none p-0 inline-flex mb-6">
+        <li>
+            <a href="{{ route('admin.books.index') }}" class="text-blue-600 hover:text-blue-800">Books</a>
+        </li>
+        <li>
+            <a href="{{ route('admin.users.index') }}" class="text-blue-600 hover:text-blue-800">Users</a>
+        </li>
+    </ul>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Total Users Card -->
         <div class="bg-white rounded-lg shadow-md p-6">
