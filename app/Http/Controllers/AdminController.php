@@ -6,15 +6,21 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Book;
 use App\Models\Download;
+use App\Services\DashboardService;
 
 class AdminController extends Controller
 {
+    protected $dashboardService;
+
+    public function __construct(DashboardService $dashboardService)
+    {
+        $this->dashboardService = $dashboardService;
+    }
+
     public function index()
     {
-        $totalUsers = User::where('role', 'user')->count();
-        $totalBooks = Book::count();
-        $latestDownloads = Download::with(['user', 'book'])->latest()->take(5)->get();
-
-        return view('admin.dashboard', compact('totalUsers', 'totalBooks', 'latestDownloads'));
+        $data = $this->dashboardService->getDashboardData();
+        $adminName = auth()->user()->name;
+        return view('admin.dashboard', array_merge($data, compact('adminName')));
     }
 }
