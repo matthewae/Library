@@ -1,6 +1,17 @@
 <?php
 
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DownloadController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookSearchController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +33,13 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/users', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+    Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
 });
 
-use App\Http\Controllers\AdminController;
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/books', [App\Http\Controllers\BookController::class, 'index'])->name('admin.books.index');
