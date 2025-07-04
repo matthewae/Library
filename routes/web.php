@@ -57,6 +57,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Admin Book Management
     Route::prefix('books')->group(function () {
         Route::get('/', [BookController::class, 'index'])->name('admin.books.index');
+        Route::get('/create', [BookController::class, 'create'])->name('admin.books.create');
         Route::post('/', [BookController::class, 'store'])->name('admin.books.store');
         Route::get('/{book}', [BookController::class, 'show'])->name('admin.books.show');
         Route::put('/{book}', [BookController::class, 'update'])->name('admin.books.update');

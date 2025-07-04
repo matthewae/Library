@@ -14,9 +14,17 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::with('category')->get();
-        $categories = \App\Models\Category::all(); // Fetch all categories
-        return view('admin.books', compact('books', 'categories'));
+        $books = Book::with('category')->paginate(10);
+        return view('admin.books', compact('books'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $categories = \App\Models\Category::all();
+        return view('admin.books.create', compact('categories'));
     }
 
     /**
