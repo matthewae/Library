@@ -26,15 +26,16 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 use App\Http\Controllers\BookCollectionController;
 
-Route::get('/', [BookCollectionController::class, 'index'])->name('user.index');
+Route::get('/', [BookCollectionController::class, 'homeIndex'])->name('user.index');
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('/books', [App\Http\Controllers\BookCollectionController::class, 'index'])->name('user.books');
+
 Route::middleware('auth')->group(function () {
     Route::get('/my-library', [App\Http\Controllers\UserController::class, 'myLibrary'])->name('user.my_library');
-Route::get('/books', [App\Http\Controllers\BookCollectionController::class, 'index'])->name('user.books');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
