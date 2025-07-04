@@ -28,21 +28,22 @@
             display: flex;
             min-height: 100vh;
             color: var(--text-dark);
-            position: relative; /* Needed for fixed sidebar */
+            position: relative;
+            line-height: 1.6;
         }
 
         .sidebar {
             width: 250px;
-            background-color:rgb(74, 74, 74); /* Darker gray */
+            background-color: var(--sidebar-bg);
             padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 15px var(--shadow-medium);
             display: flex;
             flex-direction: column;
             align-items: center;
             position: fixed;
-            height: 100vh; /* Use 100vh for full viewport height */
+            height: 100vh;
             overflow-y: auto;
-            z-index: 1000; /* Ensure sidebar is on top */
+            z-index: 1000;
             top: 0;
             left: 0;
         }
@@ -62,10 +63,10 @@
         }
 
         .logo h1 {
-            font-size: 28px; /* Adjusted font size */
+            font-size: 28px;
             font-weight: 700;
-            color: var(--primary-color);
-            margin-top: 10px; /* Add margin to separate from logo image */
+            color: #FFFFFF; /* White for logo text */
+            margin-top: 10px;
         }
 
         .nav-menu ul {
@@ -81,18 +82,18 @@
         .nav-menu a {
             display: flex;
             align-items: center;
-            padding: 12px 20px; /* Increased horizontal padding */
+            padding: 12px 20px;
             border-radius: 10px;
-            color: #FFFFFF; /* White color for non-active links */
+            color: #CBD5E0; /* Light gray for non-active links */
             text-decoration: none;
             font-weight: 500;
-            transition: background-color 0.3s, color 0.3s, transform 0.2s; /* Added transform for hover effect */
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
         }
 
         .nav-menu a:hover {
-            background-color: var(--active-link-bg);
-            color: var(--primary-color); /* Use primary color on hover */
-            transform: translateX(5px); /* Slight move on hover */
+            background-color: var(--hover-bg);
+            color: var(--active-link-text);
+            transform: translateX(5px);
         }
 
         .nav-menu a.active {
@@ -112,7 +113,7 @@
             border-radius: 15px;
             padding: 20px;
             margin-top: 40px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 25px var(--shadow-light);
             text-align: center;
         }
 
@@ -183,19 +184,20 @@
         }
 
         .logout-button-container .btn {
-            padding: 8px 15px; /* Adjust padding for a smaller button */
-            font-size: 14px; /* Adjust font size */
-            border-radius: 5px; /* Adjust border radius */
-            background-color: var(--primary-color); /* Use primary color */
+            padding: 10px 20px;
+            font-size: 15px;
+            border-radius: 8px;
+            background-color: var(--primary-color);
             color: white;
             text-decoration: none;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease; /* Smooth transition */
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .logout-button-container .btn:hover {
-            background-color: #E65A5A; /* Slightly darker primary color on hover */
+            background-color: #4C51BF; /* Darker shade of primary color */
+            transform: translateY(-2px);
         }
 
         .main-content {
@@ -220,27 +222,28 @@
 
         .search-bar input {
             width: 100%;
-            padding: 12px 20px 12px 50px;
+            padding: 14px 25px 14px 55px;
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             background-color: var(--card-bg);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            transition: border-color 0.3s;
+            box-shadow: 0 4px 15px var(--shadow-light);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .search-bar input:focus {
             outline: none;
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
         }
 
         .search-bar svg {
             position: absolute;
-            left: 18px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: var(--text-light);
         }
 
@@ -251,20 +254,21 @@
         }
 
         .tabs button {
-            padding: 10px 25px;
+            padding: 12px 30px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             background-color: var(--bg-dark);
             color: var(--text-dark);
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
         }
 
         .tabs button.active {
             background-color: var(--primary-color);
             color: white;
+            box-shadow: 0 4px 15px rgba(90, 103, 216, 0.2);
         }
 
         .shelf-section {
@@ -302,41 +306,43 @@
 
         .shelf {
             background-color: var(--shelf-color);
-            border-radius: 10px;
-            padding: 30px 20px;
+            border-radius: 15px;
+            padding: 30px 25px;
             display: flex;
-            gap: 25px;
+            gap: 30px;
             overflow-x: auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 25px var(--shadow-light);
             position: relative;
-            min-height: 200px; /* Ensure shelf has height */
-            align-items: flex-end; /* Align books to the bottom of the shelf */
+            min-height: 220px;
+            align-items: flex-end;
         }
 
 .book-item {
             background-color: var(--card-bg);
-            border-radius: 12px; /* Slightly larger border-radius */
-            padding: 20px; /* Increased padding */
+            border-radius: 15px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Stronger shadow */
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Added box-shadow transition */
+            box-shadow: 0 6px 20px var(--shadow-light);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             text-decoration: none;
             color: inherit;
             display: block;
+            flex-shrink: 0;
+            width: 180px; /* Fixed width for consistent look */
         }
 
 .book-item img {
             width: 100%;
-            height: 200px; /* Increased height for book covers */
+            height: 220px;
             object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px; /* Increased margin */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px var(--shadow-medium);
         }
 
 .book-item:hover {
-            transform: translateY(-8px); /* More pronounced lift on hover */
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+            transform: translateY(-10px);
+            box-shadow: 0 12px 30px var(--shadow-strong);
         }
 
         .book-item p {
@@ -351,22 +357,22 @@
 
         /* Scrollbar styling */
         ::-webkit-scrollbar {
-            height: 8px;
-            width: 8px;
+            height: 10px;
+            width: 10px;
         }
 
         ::-webkit-scrollbar-track {
-            background: var(--bg-light);
+            background: var(--bg-dark);
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
+            background: var(--primary-color);
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-light);
+            background: #4C51BF;
         }
     </style>
 </head>
