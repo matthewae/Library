@@ -6,11 +6,21 @@
     <title>Admin Dashboard</title>
     <!-- Add your admin CSS links here -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            width: 16rem; /* 64 units in Tailwind CSS */
+        }
+        @media (max-width: 767px) {
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <div class="flex h-screen bg-gray-100">
+    <div class="flex h-screen bg-gray-100" x-data="{ sidebarOpen: false }">
         <!-- Sidebar -->
-        <div class="sidebar bg-gray-800 text-gray-100 w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
+        <div class="sidebar bg-gray-800 text-gray-100 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out" :class="{ 'open': sidebarOpen }">
             <a href="#" class="text-white flex items-center space-x-2 px-4">
                 <span class="text-2xl font-extrabold">Admin Panel</span>
             </a>
@@ -55,5 +65,6 @@
             </main>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </body>
 </html>

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Book;
 use App\Models\Download;
+use App\Models\Category;
 use Illuminate\Support\Facades\DB;
 
 class DashboardService
@@ -24,6 +25,7 @@ class DashboardService
         $chartLabels = $bookDownloads->pluck('book.title');
         $chartData = $bookDownloads->pluck('total_downloads');
 
-        return compact('totalUsers', 'totalBooks', 'latestDownloads', 'chartLabels', 'chartData', 'bookDownloads');
+        $totalCategories = \App\Models\Category::count();
+        return compact('totalUsers', 'totalBooks', 'latestDownloads', 'chartLabels', 'chartData', 'bookDownloads', 'totalCategories');
     }
 }

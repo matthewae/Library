@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container mx-auto mt-8 p-4">
-    <h1 class="text-3xl font-bold mb-6">Category Management</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Category Management</h1>
 
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Add New Category</h2>
         <form action="{{ route('admin.categories.store') }}" method="POST">
             @csrf
@@ -17,7 +17,7 @@
                 <textarea name="description" id="description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
             </div>
             <div class="flex items-center justify-between">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Add Category</button>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">Add Category</button>
             </div>
         </form>
     </div>
@@ -31,26 +31,26 @@
     <div class="bg-white rounded-lg shadow-md p-6 mt-8">
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Existing Categories</h2>
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <table class="min-w-full bg-white border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th scope="col" class="px-6 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Name</th>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 border-b border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
                         <th scope="col" class="relative px-6 py-3"><span class="sr-only">Edit</span></th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody>
                     @foreach($categories as $category)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $category->name }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $category->description }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="#" class="btn btn-sm btn-primary edit-category-btn" data-id="{{ $category->id }}" data-name="{{ $category->name }}">Edit</a>
+                    <tr class="hover:bg-gray-50 transition duration-150 ease-in-out">
+                        <td class="px-6 py-4 whitespace-nowrap border-b border-gray-200">{{ $category->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap border-b border-gray-200">{{ $category->description }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap border-b border-gray-200 text-right text-sm font-medium">
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 mr-2 transition duration-150 ease-in-out edit-category-btn" data-id="{{ $category->id }}" data-name="{{ $category->name }}">Edit</a>
                             <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                <button type="submit" class="text-red-600 hover:text-red-800 transition duration-150 ease-in-out">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -81,8 +81,8 @@
                         <textarea name="description" id="editCategoryDescription" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
                     </div>
                     <div class="flex items-center justify-between">
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update Category</button>
-                        <button type="button" class="close-modal bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">Update Category</button>
+                        <button type="button" class="close-modal bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">Cancel</button>
                     </div>
                 </form>
             </div>

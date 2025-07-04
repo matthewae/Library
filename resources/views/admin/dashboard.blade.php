@@ -5,44 +5,37 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <!-- Total Users Card -->
-        <x-stat-card
-            title="Total Users"
-            value="{{ $totalUsers }}"
-            bg-color="bg-gradient-to-r from-blue-500 to-blue-700"
-            text-color="text-blue-100"
-        >
-            <x-slot name="icon">
+        <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500 uppercase">Total Users</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $totalUsers }}</p>
+            </div>
+            <div class="text-blue-500">
                 <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.165-1.294-.472-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.165-1.294.472-1.857m0 0A5.002 5.002 0 0112 8a5.002 5.002 0 014.528 2.143M17 16v-2a3 3 0 00-5.356-1.857M17 16H7m10 0v-2c0-.653-.165-1.294-.472-1.857M7 16H2v-2a3 3 0 015.356-1.857M7 16v-2c0-.653.165-1.294.472-1.857m0 0A5.002 5.002 0 0112 8a5.002 5.002 0 014.528 2.143"></path></svg>
-            </x-slot>
-        </x-stat-card>
+            </div>
+        </div>
 
         <!-- Total Books Card -->
-        <x-stat-card
-            title="Total Books"
-            value="{{ $totalBooks }}"
-            bg-color="bg-gradient-to-r from-green-500 to-green-700"
-            text-color="text-green-100"
-        >
-            <x-slot name="icon">
+        <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500 uppercase">Total Books</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $totalBooks }}</p>
+            </div>
+            <div class="text-green-500">
                 <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-            </x-slot>
-        </x-stat-card>
+            </div>
+        </div>
 
         <!-- Total Categories Card -->
-        <x-stat-card
-            title="Total Categories"
-            bg-color="bg-gradient-to-r from-purple-500 to-purple-700"
-            text-color="text-purple-100"
-        >
-            <x-slot name="value">
-                <a href="{{ route('admin.categories.index') }}" class="text-purple-100 hover:text-purple-200">
-                    View Details
-                </a>
-            </x-slot>
-            <x-slot name="icon">
-                <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5.5c.582 0 1.144.236 1.554.659l4.006 4.006c.423.423.659.985.659 1.554V21a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zm0 0h-.01"></path></svg>
-            </x-slot>
-        </x-stat-card>
+        <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500 uppercase">Total Categories</p>
+                <p class="text-3xl font-bold text-gray-900">{{ $totalCategories }}</p>
+            </div>
+            <div class="text-purple-500">
+                <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5.5c.582 0 1.144.236 1.554.659l4.006 4.006c.423.423.659.985.659 1.554V21a1 1 0 01-1 1H7a1 1 0 011-1zm0 0h-.01"></path></svg>
+            </div>
+        </div>
     </div>
 
     <!-- Latest Downloads Table -->
