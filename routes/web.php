@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
@@ -8,10 +7,11 @@ use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookSearchController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-
+use App\Http\Controllers\BookCollectionController;
+use App\Models\Book;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,52 +24,50 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 |
 */
 
-use App\Http\Controllers\BookCollectionController;
-
+// Public Routes
 Route::get('/', [BookCollectionController::class, 'homeIndex'])->name('user.index');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/books', [App\Http\Controllers\BookCollectionController::class, 'index'])->name('user.books');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/my-library', [App\Http\Controllers\UserController::class, 'myLibrary'])->name('user.my_library');
-});
-
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
-    Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
-    Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
-    Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
-});
-
-
-
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/books', [App\Http\Controllers\BookController::class, 'index'])->name('admin.books.index');
-    Route::post('/admin/books', [App\Http\Controllers\BookController::class, 'store'])->name('admin.books.store');
-    Route::get('/admin/books/{book}', [App\Http\Controllers\BookController::class, 'show'])->name('admin.books.show');
-    Route::put('/admin/books/{book}', [App\Http\Controllers\BookController::class, 'update'])->name('admin.books.update');
-    Route::delete('/admin/books/{book}', [App\Http\Controllers\BookController::class, 'destroy'])->name('admin.books.destroy');
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-
-    Route::get('/admin/categories', [App\Http\Controllers\CategoryController::class, 'index'])->name('admin.categories.index');
-    Route::post('/admin/categories', [App\Http\Controllers\CategoryController::class, 'store'])->name('admin.categories.store');
-    Route::put('/admin/categories/{category}', [App\Http\Controllers\CategoryController::class, 'update'])->name('admin.categories.update');
-    Route::delete('/admin/categories/{category}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('admin.categories.destroy');
-});
-
-use App\Models\Book;
-
+Route::get('/books', [BookCollectionController::class, 'index'])->name('user.books');
 Route::get('/user/books/{id}', function ($id) {
     $book = Book::with('category')->findOrFail($id);
     return view('user.show', compact('book'));
 })->name('user.show');
 
-Route::middleware(['auth', 'user'])->group(function () {
-    Route::get('/user/dashboard', [App\Http\Controllers\BookCollectionController::class, 'index'])->name('user.index');
+// Authentication Routes
+Auth::routes();
 
-Route::get('/search-books', [App\Http\Controllers\BookSearchController::class, 'search'])->name('search.books');
+// Authenticated User Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::get('/my-library', [UserController::class, 'myLibrary'])->name('user.my_library');
+    Route::get('/search-books', [BookSearchController::class, 'search'])->name('search.books');
+});
+
+// Admin Routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
+    // Admin User Management
+    Route::prefix('users')->group(function () {
+        Route::get('/', [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::get('/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+        Route::put('/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+        Route::delete('/{user}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    });
+
+    // Admin Book Management
+    Route::prefix('books')->group(function () {
+        Route::get('/', [BookController::class, 'index'])->name('admin.books.index');
+        Route::post('/', [BookController::class, 'store'])->name('admin.books.store');
+        Route::get('/{book}', [BookController::class, 'show'])->name('admin.books.show');
+        Route::put('/{book}', [BookController::class, 'update'])->name('admin.books.update');
+        Route::delete('/{book}', [BookController::class, 'destroy'])->name('admin.books.destroy');
+    });
+
+    // Admin Category Management
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('admin.categories.index');
+        Route::post('/', [CategoryController::class, 'store'])->name('admin.categories.store');
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('admin.categories.update');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+    });
 });
