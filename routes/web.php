@@ -24,13 +24,18 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 |
 */
 
-Route::get('/', function () {
-    return view('user.index');
-});
+use App\Http\Controllers\BookCollectionController;
+
+Route::get('/', [BookCollectionController::class, 'index'])->name('user.index');
 
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/my-library', [App\Http\Controllers\UserController::class, 'myLibrary'])->name('user.my_library');
+Route::get('/books', [App\Http\Controllers\BookCollectionController::class, 'index'])->name('user.books');
+});
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
@@ -63,9 +68,7 @@ Route::get('/user/books/{id}', function ($id) {
 })->name('user.show');
 
 Route::middleware(['auth', 'user'])->group(function () {
-    Route::get('/user/dashboard', function () {
-    return view('user.index');
-})->name('user.index');
+    Route::get('/user/dashboard', [App\Http\Controllers\BookCollectionController::class, 'index'])->name('user.index');
 
 Route::get('/search-books', [App\Http\Controllers\BookSearchController::class, 'search'])->name('search.books');
 });

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Readowl - My Library</title>
+    <title>Readowl - All Books</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,7 +13,8 @@
             --secondary-color: #FFD166;
             --text-dark: #333333;
             --text-light: #666666;
-            --border-color: #EAEAEA;            --shelf-color: #F0EAD6;
+            --border-color: #EAEAEA;
+            --shelf-color: #F0EAD6;
             --sidebar-bg:rgb(109, 109, 109); /* Light gray for better logo visibility */
             --card-bg: #FFFFFF;
             --active-link-bg: #FFF8E1;
@@ -305,15 +306,15 @@
             border-radius: 10px;
             padding: 30px 20px;
             display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next line */
             gap: 25px;
-            overflow-x: auto;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             position: relative;
             min-height: 200px; /* Ensure shelf has height */
-            align-items: flex-end; /* Align books to the bottom of the shelf */
+            align-items: flex-start; /* Align books to the top of the shelf */
         }
 
-.book-item {
+        .book-item {
             background-color: var(--card-bg);
             border-radius: 12px; /* Slightly larger border-radius */
             padding: 20px; /* Increased padding */
@@ -323,9 +324,11 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            width: calc(20% - 20px); /* Adjust width for 5 items per row with gap */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
 
-.book-item img {
+        .book-item img {
             width: 100%;
             height: 200px; /* Increased height for book covers */
             object-fit: cover;
@@ -334,7 +337,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Stronger shadow */
         }
 
-.book-item:hover {
+        .book-item:hover {
             transform: translateY(-8px); /* More pronounced lift on hover */
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
         }
@@ -405,28 +408,26 @@
                     </li>
                 </ul>
             </nav>
-            @if(Auth::check())
             <div class="reading-card">
                 <p>Continue reading</p>
                 <img src="https://covers.openlibrary.org/b/id/8235012-L.jpg" alt="Book Cover">
                 <h4>The Design of Everyday Things</h4>
             </div>
-            @endif
         </div>
     </div>
     <div class="main-content">
         <div class="header">
-            <form action="{{ route('user.books') }}" method="GET" class="search-bar">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <input type="text" name="search" placeholder="Search in My library" value="{{ request('search') }}">
-            </form>
+            <div class="search-bar">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" placeholder="Search in All Books">
+            </div>
             <div class="header-right">
                 <div class="user-profile">
                     <img src="https://via.placeholder.com/45" alt="User Avatar">
                     <div class="user-info">
                         @auth
                             <h5>{{ Auth::user()->name }}</h5>
-                            <p>Welcome!r</p>
+                            <p>Welcome!</p>
                         @else
                             <h5>Guest</h5>
                             <p>Please log in</p>
@@ -448,42 +449,22 @@
             </div>
         </div>
 
-        <div class="tabs">
-            <button class="active">Shelves</button>
-            <button onclick="window.location='{{ route('user.books') }}'">All Books</button>
-        </div>
-
         <div class="shelf-section">
             <div class="shelf-header">
-                <h3>Recommendations</h3>
-                <a href="{{ route('user.books') }}">Full shelf <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a>
+                <h3>All Books</h3>
             </div>
             <div class="shelf">
-                @foreach($books as $book)
-                <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
-                    <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }} Cover">
-                    <p>{{ $book->title }}</p>
-                </a>
-                @endforeach
+                @forelse($books as $book)
+                    <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
+                        <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }} Cover">
+                        <p>{{ $book->title }}</p>
+                    </a>
+                @empty
+                    <p>No books found.</p>
+                @endforelse
             </div>
         </div>
 
-        <div class="shelf-section">
-            <div class="shelf-header">
-                <h3>Other Books</h3>
-                <a href="{{ route('user.books') }}">Full shelf <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a>
-            </div>
-            <div class="shelf">
-                @foreach($otherBooks as $book)
-                <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
-                    <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }} Cover">
-                    <p>{{ $book->title }}</p>
-                </a>
-                @endforeach
-            </div>
-        </div>
-
-        </div>
     </div>
 </body>
 </html>

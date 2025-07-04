@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -66,27 +65,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user = new User();
-        $user->name = $data['name'];
-        $user->username = $data['username'];
-        $user->password = $data['password'];
-        $user->role = 'user';
-        $user->save();
+        return User::create([
+            'name' => $data['name'],
+            'username' => $data['username'],
 
-        return $user;
-    }
-
-    /**
-     * The user has been registered.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    protected function registered(Request $request, $user)
-    {
-        $this->guard()->logout();
-
-        return redirect($this->redirectPath())->with('status', 'Registration successful! Please log in.');
+            'password' => $data['password'],
+            'role' => 'user',
+        ]);
     }
 }

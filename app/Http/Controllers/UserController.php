@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Favorite;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -38,6 +40,15 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         return response()->json($user);
+    }
+
+    public function myLibrary()
+    {
+        $user = Auth::user();
+        $savedBooks = Favorite::where('user_id', $user->id)->with('book')->get()->map(function($favorite) {
+            return $favorite->book;
+        });
+        return view('user.my_library', compact('savedBooks'));
     }
 
     public function update(Request $request, $id)

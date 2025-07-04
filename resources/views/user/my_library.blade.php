@@ -13,7 +13,8 @@
             --secondary-color: #FFD166;
             --text-dark: #333333;
             --text-light: #666666;
-            --border-color: #EAEAEA;            --shelf-color: #F0EAD6;
+            --border-color: #EAEAEA;
+            --shelf-color: #F0EAD6;
             --sidebar-bg:rgb(109, 109, 109); /* Light gray for better logo visibility */
             --card-bg: #FFFFFF;
             --active-link-bg: #FFF8E1;
@@ -313,7 +314,7 @@
             align-items: flex-end; /* Align books to the bottom of the shelf */
         }
 
-.book-item {
+        .book-item {
             background-color: var(--card-bg);
             border-radius: 12px; /* Slightly larger border-radius */
             padding: 20px; /* Increased padding */
@@ -325,7 +326,7 @@
             display: block;
         }
 
-.book-item img {
+        .book-item img {
             width: 100%;
             height: 200px; /* Increased height for book covers */
             object-fit: cover;
@@ -334,7 +335,7 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Stronger shadow */
         }
 
-.book-item:hover {
+        .book-item:hover {
             transform: translateY(-8px); /* More pronounced lift on hover */
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
         }
@@ -392,12 +393,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('user.books') }}" class="{{ Request::is('books') ? 'active' : '' }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
-                            All Books
-                        </a>
-                    </li>
-                    <li>
                         <a href="#">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 12v1c0 1.1-.9 2-2 2H6.41L11 19.59 9.59 21 3 14.41V12c0-1.1 .9-2 2-2h14c1.1 0 2 .9 2 2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
                             News
@@ -416,10 +411,10 @@
     </div>
     <div class="main-content">
         <div class="header">
-            <form action="{{ route('user.books') }}" method="GET" class="search-bar">
+            <div class="search-bar">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <input type="text" name="search" placeholder="Search in My library" value="{{ request('search') }}">
-            </form>
+                <input type="text" placeholder="Search in My library">
+            </div>
             <div class="header-right">
                 <div class="user-profile">
                     <img src="https://via.placeholder.com/45" alt="User Avatar">
@@ -449,37 +444,22 @@
         </div>
 
         <div class="tabs">
-            <button class="active">Shelves</button>
-            <button onclick="window.location='{{ route('user.books') }}'">All Books</button>
+            <button class="active">My Saved Books</button>
         </div>
 
         <div class="shelf-section">
             <div class="shelf-header">
-                <h3>Recommendations</h3>
-                <a href="{{ route('user.books') }}">Full shelf <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a>
+                <h3>My Saved Books</h3>
             </div>
             <div class="shelf">
-                @foreach($books as $book)
-                <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
-                    <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }} Cover">
-                    <p>{{ $book->title }}</p>
-                </a>
-                @endforeach
-            </div>
-        </div>
-
-        <div class="shelf-section">
-            <div class="shelf-header">
-                <h3>Other Books</h3>
-                <a href="{{ route('user.books') }}">Full shelf <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></a>
-            </div>
-            <div class="shelf">
-                @foreach($otherBooks as $book)
-                <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
-                    <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }} Cover">
-                    <p>{{ $book->title }}</p>
-                </a>
-                @endforeach
+                @forelse($savedBooks as $book)
+                    <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
+                        <img src="{{ $book->cover_url }}" alt="Book Cover">
+                        <p>{{ $book->title }}</p>
+                    </a>
+                @empty
+                    <p>You haven't saved any books yet.</p>
+                @endforelse
             </div>
         </div>
 
