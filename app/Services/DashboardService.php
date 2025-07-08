@@ -17,10 +17,10 @@ class DashboardService
         $latestDownloads = Download::with(['user', 'book'])->latest()->take(5)->get();
 
         $bookDownloads = Download::select('book_id', DB::raw('count(*) as total_downloads'))
-                                 ->groupBy('book_id')
-                                 ->with('book')
-                                 ->orderByDesc('total_downloads')
-                                 ->get();
+                                ->groupBy('book_id')
+                                ->with('book')
+                                ->orderByDesc('total_downloads')
+                                ->get();
 
         $chartLabels = $bookDownloads->pluck('book.title');
         $chartData = $bookDownloads->pluck('total_downloads');
