@@ -1,228 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Register - Librarree</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --orange: #FF8C42;
-            --light-orange: #FFE0B2;
-            --primary-text: #333;
-            --white: #ffffff;
-            --glass-bg: rgba(255, 255, 255, 0.25);
-            --border-color: #e0e0e0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - Librarree</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --libraree-orange: #FF8C42;
+      --libraree-light-orange: #FFE0B2;
+      --primary-color: #FF6B6B;
+      --border-color: #EAEAEA;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--libraree-light-orange);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+      overflow: hidden;
+      position: relative;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5af19 0%, #f12711 100%); /* More modern gradient */
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    .register-container {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(14px);
+      padding: 45px 35px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in-out;
+      color: #000;
+    }
 
-        .register-container {
-            background: var(--glass-bg);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2); /* Enhanced shadow */
-            border-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            padding: 40px 30px;
-            color: var(--primary-text);
-            animation: fadeIn 0.8s ease-out;
-        }
+    .register-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: var(--libraree-orange);
+    }
 
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-size: 28px;
-            color: #000; /* Changed to black */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Added text shadow */
-        }
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+      color: #000;
+    }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 10px;
+      padding: 10px 15px;
+      border: 1px solid var(--border-color);
+      transition: border-color 0.3s ease;
+    }
 
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 6px;
-            color: var(--primary-text);
-        }
+    .input-wrapper:focus-within {
+      border-color: var(--libraree-orange);
+    }
 
-        .form-group input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 8px; /* Slightly smaller border-radius for inputs */
-            border: 1px solid var(--border-color);
-            font-size: 15px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
-        }
+    .input-icon {
+      margin-right: 10px;
+      font-size: 1.2em;
+      color: #000;
+    }
 
-        .input-wrapper {
-            display: flex;
-            align-items: center;
-            border-radius: 8px; /* Consistent border-radius */
-            border: 1px solid var(--border-color);
-            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
-            padding-right: 10px; /* Add some padding for the icon */
-        }
+    .input-wrapper input {
+      background: transparent;
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 16px;
+      color: #000;
+    }
 
-        .input-wrapper input {
-            flex-grow: 1;
-            border: none;
-            padding: 12px 0px 12px 14px; /* Adjust padding for input inside wrapper */
-        }
+    .input-wrapper input::placeholder {
+      color: rgba(0, 0, 0, 0.5);
+    }
 
-        .input-icon {
-            cursor: pointer;
-            color: var(--primary-text);
-            font-size: 1.2em;
-        }
+    .register-button {
+      width: 100%;
+      padding: 15px;
+      background-color: var(--libraree-orange);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
 
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--orange);
-            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.3);
-        }
+    .register-button:hover {
+      background-color: #E67E30;
+      transform: translateY(-2px);
+    }
 
-        .input-wrapper:focus-within {
-            border-color: var(--orange);
-            box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.3);
-        }
+    .login-link {
+      margin-top: 25px;
+      font-size: 15px;
+      color: #000;
+    }
 
-        small.text-danger {
-            color: red;
-            font-size: 12px;
-        }
+    .login-link a {
+      color: var(--libraree-orange);
+      text-decoration: none;
+      font-weight: 600;
+    }
 
-        .btn-submit {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--orange);
-            border: none;
-            border-radius: 8px; /* Slightly smaller border-radius for button */
-            font-size: 16px;
-            color: var(--white);
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s;
-        }
+    .login-link a:hover {
+      color: var(--primary-color);
+    }
 
-        .btn-submit:hover {
-            background-color: #e6762f;
-            transform: translateY(-2px);
-        }
+    .back-link {
+      margin-top: 15px;
+      font-size: 15px;
+      color: #000;
+    }
 
-        .footer-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.95em;
-            color: var(--primary-text);
-        }
+    .back-link a {
+      color: var(--libraree-orange);
+      text-decoration: none;
+      font-weight: 600;
+    }
 
-        .footer-link a {
-            color: #000; /* Changed to black */
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
+    .back-link a:hover {
+      color: var(--primary-color);
+    }
 
-        .footer-link a:hover {
-            color: #ff5a00;
-        }
+    @keyframes fadeIn {
+      from {
+        transform: translateY(15px);
+        opacity: 0;
+      }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+      to {
+        transform: translateY(0px);
+        opacity: 1;
+      }
+    }
 
-        @media (max-width: 600px) {
-            .register-container {
-                padding: 30px 20px;
-            }
-        }
-    </style>
+    @media (max-width: 768px) {
+      .register-container {
+        padding: 30px 20px;
+        margin: 20px;
+      }
+
+      .register-title {
+        font-size: 24px;
+      }
+
+      label {
+        font-size: 14px;
+      }
+
+      .input-wrapper {
+        padding: 8px 12px;
+      }
+
+      .input-wrapper input {
+        font-size: 15px;
+      }
+
+      .register-button {
+        padding: 12px;
+        font-size: 16px;
+      }
+
+      .login-link,
+      .back-link {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="register-container">
-        <h2>Create Your Librarree Account</h2>
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
-                @error('name')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" value="{{ old('username') }}" required>
-                @error('username')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="input-wrapper">
-                    <input type="password" id="password" name="password" required>
-                    <span class="input-icon password-toggle" onclick="togglePasswordVisibility('password')"><i class="fa-solid fa-eye"></i></span>
-                </div>
-                @error('password')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="password-confirm">Confirm Password</label>
-                <div class="input-wrapper">
-                    <input type="password" id="password-confirm" name="password_confirmation" required>
-                    <span class="input-icon password-toggle" onclick="togglePasswordVisibility('password-confirm')"><i class="fa-solid fa-eye"></i></span>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-submit">Register</button>
-        </form>
-
-        <div class="footer-link">
-            Already have an account? <a href="{{ route('login') }}">Login</a>
-        </div>
+  <div class="register-container">
+    <h2 class="register-title">Register to Librarree</h2>
+    @if (session('status'))
+    <div class="alert alert-success">
+      {{ session('status') }}
     </div>
-    <script>
-        function togglePasswordVisibility(id) {
-            const passwordInput = document.getElementById(id);
-            const passwordToggle = passwordInput.nextElementSibling.querySelector('i'); // Get the <i> element
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                passwordToggle.classList.remove('fa-eye');
-                passwordToggle.classList.add('fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                passwordToggle.classList.remove('fa-eye-slash');
-                passwordToggle.classList.add('fa-eye');
-            }
-        }
-    </script>
+    @endif
+    <form method="POST" action="{{ route('register') }}">
+      @csrf
+      <div class="form-group">
+        <label for="name">Name</label>
+        <div class="input-wrapper">
+          <span class="input-icon">👤</span>
+          <input type="text" id="name" name="name" placeholder="Enter your name" value="{{ old('name') }}" required autofocus />
+        </div>
+        @error('name')
+        <span class="text-danger" role="alert">{{ $message }}</span>
+        @enderror
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-wrapper">
+          <span class="input-icon">👤</span>
+          <input type="text" id="username" name="username" placeholder="Enter your username" value="{{ old('username') }}" required />
+        </div>
+        @error('username')
+        <span class="text-danger" role="alert">{{ $message }}</span>
+        @enderror
+      </div>
+
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required />
+        </div>
+        @error('password')
+        <span class="text-danger" role="alert">{{ $message }}</span>
+        @enderror
+      </div>
+
+      <div class="form-group">
+        <label for="password_confirmation">Confirm Password</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password" required />
+        </div>
+      </div>
+
+      <button type="submit" class="register-button">Register</button>
+    </form>
+
+    <p class="login-link">
+      Already have an account?
+      <a href="{{ route('login') }}">Login here</a>
+    </p>
+    <p class="back-link">
+      <a href="{{ route('user.index') }}">Back to Home</a>
+    </p>
+  </div>
 </body>
+
 </html>
