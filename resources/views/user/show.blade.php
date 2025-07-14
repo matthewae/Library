@@ -155,7 +155,7 @@
 </head>
 <body>
     <div class="book-detail-container" id="bookDetailContainer">
-        <img src="{{ asset('storage/' . $book->cover_image) }}" alt="Book Cover" class="book-cover-large">
+        <img src="{{ $book->cover_image_url }}" alt="Book Cover" class="book-cover-large">
         <div class="book-info">
             <h1>{{ $book->title }}</h1>
             <h2>{{ $book->author }}</h2>
@@ -171,7 +171,8 @@
                 </div>
                 <div class="meta-item">
                     <strong>Pages</strong>
-                    <span>{{ $book->pages }}</span>
+                    <span>{{ $book->pages['count'] ?? 'N/A' }}</span>
+
                 </div>
             </div>
             <div style="display: flex; gap: 15px; margin-top: 30px;">
@@ -197,7 +198,7 @@
     <script src="https://cdn.jsdelivr.net/npm/page-flip@latest/dist/page-flip.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
-        const pdfPath = "{{ asset('storage/' . $book->pdf_path) }}";
+        const pdfPath = "{{ asset('storage/' . $book->pdf_file_path) }}";
         const bookId = {{ $book->id }};
 
         document.getElementById('readBookBtn').addEventListener('click', function() {

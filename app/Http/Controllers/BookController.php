@@ -32,7 +32,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|max:255',
             'author' => 'required|max:255',
@@ -40,8 +40,8 @@ class BookController extends Controller
             'publication_year' => 'required|integer|min:1000|max:' . (date('Y') + 1),
             'description' => 'nullable',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:819200',
-            'pdf_path' => 'required|file|mimes:pdf|max:819200',
-            'pages' => 'nullable|json',
+            'pdf_file_path' => 'nullable|file|mimes:pdf|max:819200',
+            'pages' => 'nullable|integer',
         ]);
 
         $coverImagePath = null;
@@ -50,8 +50,8 @@ class BookController extends Controller
         }
 
         $pdfPath = null;
-        if ($request->hasFile('pdf_path')) {
-            $pdfPath = $request->file('pdf_path')->store('pdfs', 'public');
+        if ($request->hasFile('pdf_file_path')) {
+            $pdfPath = $request->file('pdf_file_path')->store('pdfs', 'public');
         }
 
         $book = Book::create([
@@ -61,12 +61,12 @@ class BookController extends Controller
             'publisher' => $request->publisher,
             'publication_year' => $request->publication_year,
             'description' => $request->description,
-            'cover_image' => $coverImagePath,
-            'pdf_path' => $pdfPath,
-            'pages' => $request->pages,
+            'cover_image_path' => $coverImagePath,
+            'pdf_file_path' => $pdfPath,
+            'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
 
-        return redirect()->route('admin.books.index')->with('success', 'Book added successfully!');
+        return redirect()->route('admin.books.index')->with('success', 'Book created successfully.');
     }
 
     /**
@@ -74,7 +74,8 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        return response()->json($book->load('category'));
+
+        return view('user.show', compact('book'));
     }
 
     /**
@@ -90,11 +91,11 @@ class BookController extends Controller
             'publication_year' => 'required|integer|min:1000|max:' . (date('Y') + 1),
             'description' => 'nullable',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:819200',
-            'pdf_path' => 'required|file|mimes:pdf|max:819200',
-            'pages' => 'nullable|json',
+            'pdf_file_path' => 'nullable|file|mimes:pdf|max:819200',
+            'pages' => 'nullable|integer',
         ]);
 
-        $coverImagePath = $book->cover_image;
+        $coverImagePath = $book->cover_image_path;
         if ($request->hasFile('cover_image')) {
             if ($coverImagePath) {
                 Storage::disk('public')->delete($coverImagePath);
@@ -102,12 +103,12 @@ class BookController extends Controller
             $coverImagePath = $request->file('cover_image')->store('covers', 'public');
         }
 
-        $pdfPath = $book->pdf_path;
-        if ($request->hasFile('pdf_path')) {
+        $pdfPath = $book->pdf_file_path;
+        if ($request->hasFile('pdf_file_path')) {
             if ($pdfPath) {
                 Storage::disk('public')->delete($pdfPath);
             }
-            $pdfPath = $request->file('pdf_path')->store('pdfs', 'public');
+            $pdfPath = $request->file('pdf_file_path')->store('pdfs', 'public');
         }
 
         $book->update([
@@ -117,9 +118,9 @@ class BookController extends Controller
             'publisher' => $request->publisher,
             'publication_year' => $request->publication_year,
             'description' => $request->description,
-            'cover_image' => $coverImagePath,
-            'pdf_path' => $pdfPath,
-            'pages' => $request->pages,
+            'cover_image_path' => $coverImagePath,
+            'pdf_file_path' => $pdfPath,
+            'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
 
         return response()->json($book);
@@ -133,8 +134,8 @@ class BookController extends Controller
         if ($book->cover_image) {
             Storage::disk('public')->delete($book->cover_image);
         }
-        if ($book->pdf_path) {
-            Storage::disk('public')->delete($book->pdf_path);
+        if ($book->pdf_file_path) {
+            Storage::disk('public')->delete($book->pdf_file_path);
         }
         $book->delete();
         return response()->json(null, 204);

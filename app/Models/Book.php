@@ -42,4 +42,9 @@ class Book extends Model
     {
         return $this->hasMany(Download::class);
     }
+
+    public function getCoverImageUrlAttribute(): string
+    {
+        return asset('storage/' . $this->cover_image_path);
+    }
 }

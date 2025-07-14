@@ -43,7 +43,7 @@
                             <form action="{{ route('admin.books.destroy', $book->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800 transition duration-150 ease-in-out">Delete</button>
+                                <button type="submit" class="text-red-600 hover:text-red-800 transition duration-150 ease-in-out" onclick="return confirm('Are you sure you want to delete this book?');">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -57,3 +57,13 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            alert('{{ session('success') }}');
+        @endif
+    });
+</script>
+@endpush

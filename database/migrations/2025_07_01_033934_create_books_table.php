@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('publication_year');
             $table->text('description');
             $table->string('cover_image_path')->nullable();
-            $table->string('pdf_file_path');
+            $table->string('pdf_file_path')->nullable();
             $table->json('pages')->nullable();
             $table->timestamps();
         });

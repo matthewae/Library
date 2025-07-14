@@ -12,7 +12,7 @@
       --primary-color: #FF6B6B;
       --border-color: #EAEAEA;
     }
-
+    
     body {
       font-family: 'Inter', sans-serif;
       margin: 0;
