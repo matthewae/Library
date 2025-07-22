@@ -23,6 +23,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'role',
+        'last_read_book_id',
     ];
 
     /**
@@ -58,5 +59,10 @@ class User extends Authenticatable
     public function favoriteBooks()
     {
         return $this->belongsToMany(Book::class, 'favorites', 'user_id', 'book_id');
+    }
+
+    public function lastReadBook()
+    {
+        return $this->belongsTo(Book::class, 'last_read_book_id');
     }
 }

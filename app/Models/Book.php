@@ -19,9 +19,9 @@ class Book extends Model
         'publisher',
         'publication_year',
         'description',
-        'cover_image_path',
-        'pdf_file_path',
-        'original_pdf_name',
+        'cover_image_data',
+        'original_cover_name',
+        'pdf_file_data',
         'pages',
     ];
 
@@ -46,6 +46,27 @@ class Book extends Model
 
     public function getCoverImageUrlAttribute(): string
     {
-        return asset('storage/' . $this->cover_image_path);
+        if ($this->cover_image_data) {
+            return 'data:image/jpeg;base64,' . $this->cover_image_data;
+        }
+        return asset('images/book.png'); // Default image if no cover
+    }
+
+    public function setCoverImageDataAttribute($value)
+    {
+        if ($value && !str_starts_with($value, 'data:image')) {
+            $this->attributes['cover_image_data'] = base64_encode($value);
+        } else {
+            $this->attributes['cover_image_data'] = $value;
+        }
+    }
+
+    public function setPdfFileDataAttribute($value)
+    {
+        if ($value && !str_starts_with($value, '%PDF-')) {
+            $this->attributes['pdf_file_data'] = base64_encode($value);
+        } else {
+            $this->attributes['pdf_file_data'] = $value;
+        }
     }
 }

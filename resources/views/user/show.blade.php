@@ -180,43 +180,16 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
                     Back to Library
                 </a>
-                <button id="readBookBtn" class="read-button">
+                <a href="{{ route('books.pdf', ['id' => $book->id]) }}" target="_blank" class="read-button">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7.58 4.5 4 8.08 4 12.5c0 3.81 2.97 6.95 6.79 7.44L12 22l1.21-2.06c3.82-.49 6.79-3.63 6.79-7.44 0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM11 9h2v5h-2z"/></svg>
                     Read Book
-                </button>
+                </a>
             </div>
 
         </div>
     </div>
     </div>
 
-    <div id="flipbookContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
-        <div id="flipbook" style="width: 800px; height: 600px; background-color: white;"></div>
-        <button id="closeFlipbookBtn" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: white; font-size: 2em; cursor: pointer;">&times;</button>
-    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.7.570/pdf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/page-flip@latest/dist/page-flip.min.js"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script>
-        const pdfPath = "{{ asset('storage/' . $book->pdf_file_path) }}";
-        const bookId = {{ $book->id }};
-
-        document.getElementById('readBookBtn').addEventListener('click', function() {
-            document.getElementById('bookDetailContainer').style.display = 'none';
-            document.getElementById('flipbookContainer').style.display = 'flex';
-            initializeFlipbook(pdfPath, bookId);
-        });
-
-        document.getElementById('closeFlipbookBtn').addEventListener('click', function() {
-            document.getElementById('bookDetailContainer').style.display = 'flex';
-            document.getElementById('flipbookContainer').style.display = 'none';
-            // Destroy flipbook instance if necessary to free up resources
-            if (window.myFlipBook) {
-                window.myFlipBook.destroy();
-                window.myFlipBook = null;
-            }
-        });
-    </script>
 </body>
 </html>

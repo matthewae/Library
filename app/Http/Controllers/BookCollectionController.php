@@ -29,7 +29,7 @@ class BookCollectionController extends Controller
 
         if ($search) {
             $books = Book::where('title', 'like', '%' . $search . '%')->get();
-            $otherBooks = collect(); // Kosongkan otherBooks jika ada pencarian
+            $otherBooks = Book::where('title', 'like', '%' . $search . '%')->get();
         } else {
             $books = Book::all(); // Mengambil semua buku
             $otherBooks = Book::all(); 

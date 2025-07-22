@@ -409,8 +409,13 @@
             @if(Auth::check())
             <div class="reading-card">
                 <p>Continue reading</p>
-                <img src="https://covers.openlibrary.org/b/id/8235012-L.jpg" alt="Book Cover">
-                <h4>The Design of Everyday Things</h4>
+                @if(Auth::user()->lastReadBook)
+                <img src="{{ Auth::user()->lastReadBook->cover_image_url }}" alt="{{ Auth::user()->lastReadBook->title }} Cover">
+                <h4>{{ Auth::user()->lastReadBook->title }}</h4>
+                @else
+                <img src="{{ asset('images/book.png') }}" alt="No Book Cover">
+                <h4>No book in reading history</h4>
+                @endif
             </div>
             @endif
         </div>

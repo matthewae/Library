@@ -32,6 +32,8 @@ Route::get('/user/books/{id}', function ($id) {
     return view('user.show', compact('book'));
 })->name('user.show');
 
+Route::get('/books/{id}/pdf', [BookController::class, 'showPdf'])->name('books.pdf');
+
 // Authentication Routes
 Auth::routes();
 

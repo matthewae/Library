@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('publisher');
             $table->integer('publication_year');
             $table->text('description');
-            $table->string('cover_image_path')->nullable();
-            $table->string('pdf_file_path')->nullable();
+            $table->longText('cover_image_data')->nullable();
+            $table->string('original_cover_name')->nullable();
+            $table->longText('pdf_file_data')->nullable();
             $table->json('pages')->nullable();
             $table->timestamps();
         });
@@ -31,6 +32,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::table('books', function (Blueprint $table) {
+            $table->dropForeign(['category_id']);
+            $table->dropColumn(['cover_image_data', 'original_cover_name', 'pdf_file_data']);
+        });
     }
+
 };

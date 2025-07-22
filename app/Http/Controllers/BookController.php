@@ -44,24 +44,20 @@ class BookController extends Controller
             'pages' => 'nullable|integer',
         ]);
 
-        $coverImagePath = null;
+        $coverImageData = null;
+        $originalCoverName = null;
         if ($request->hasFile('cover_image')) {
-            $coverImagePath = $request->file('cover_image')->store('covers', 'public');
+            $coverFile = $request->file('cover_image');
+            $coverImageData = file_get_contents($coverFile->getRealPath());
+            $originalCoverName = $coverFile->getClientOriginalName();
         }
 
-        $pdfPath = null;
+        $pdfFileData = null;
+        $originalPdfName = null;
         if ($request->hasFile('pdf_file_path')) {
-            try {
-                $pdfFile = $request->file('pdf_file_path');
-                $pdfPath = $pdfFile->store('pdfs', 'public');
-                $originalPdfName = $pdfFile->getClientOriginalName();
-            } catch (\Exception $e) {
-                \Log::error('Error saving PDF file: ' . $e->getMessage());
-                $pdfPath = null; // Ensure pdfPath is null if saving fails
-                $originalPdfName = null;
-            }
-        } else {
-            $originalPdfName = null;
+            $pdfFile = $request->file('pdf_file_path');
+            $pdfFileData = file_get_contents($pdfFile->getRealPath());
+            $originalPdfName = $pdfFile->getClientOriginalName();
         }
 
         $book = Book::create([
@@ -71,8 +67,9 @@ class BookController extends Controller
             'publisher' => $request->publisher,
             'publication_year' => $request->publication_year,
             'description' => $request->description,
-            'cover_image_path' => $coverImagePath,
-            'pdf_file_path' => $pdfPath,
+            'cover_image_data' => $coverImageData,
+            'original_cover_name' => $originalCoverName,
+            'pdf_file_data' => $pdfFileData,
             'original_pdf_name' => $originalPdfName,
             'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
@@ -106,22 +103,19 @@ class BookController extends Controller
             'pages' => 'nullable|integer',
         ]);
 
-        $coverImagePath = $book->cover_image_path;
+        $coverImageData = $book->cover_image_data;
+        $originalCoverName = $book->original_cover_name;
         if ($request->hasFile('cover_image')) {
-            if ($coverImagePath) {
-                Storage::disk('public')->delete($coverImagePath);
-            }
-            $coverImagePath = $request->file('cover_image')->store('covers', 'public');
+            $coverFile = $request->file('cover_image');
+            $coverImageData = file_get_contents($coverFile->getRealPath());
+            $originalCoverName = $coverFile->getClientOriginalName();
         }
 
-        $pdfPath = $book->pdf_file_path;
+        $pdfFileData = $book->pdf_file_data;
         $originalPdfName = $book->original_pdf_name;
         if ($request->hasFile('pdf_file_path')) {
-            if ($pdfPath) {
-                Storage::disk('public')->delete($pdfPath);
-            }
             $pdfFile = $request->file('pdf_file_path');
-            $pdfPath = $pdfFile->store('pdfs', 'public');
+            $pdfFileData = file_get_contents($pdfFile->getRealPath());
             $originalPdfName = $pdfFile->getClientOriginalName();
         }
 
@@ -132,8 +126,9 @@ class BookController extends Controller
             'publisher' => $request->publisher,
             'publication_year' => $request->publication_year,
             'description' => $request->description,
-            'cover_image_path' => $coverImagePath,
-            'pdf_file_path' => $pdfPath,
+            'cover_image_data' => $coverImageData,
+            'original_cover_name' => $originalCoverName,
+            'pdf_file_data' => $pdfFileData,
             'original_pdf_name' => $originalPdfName,
             'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
@@ -146,13 +141,21 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        if ($book->cover_image) {
-            Storage::disk('public')->delete($book->cover_image);
-        }
-        if ($book->pdf_file_path) {
-            Storage::disk('public')->delete($book->pdf_file_path);
-        }
         $book->delete();
         return response()->json(null, 204);
+    }
+
+    public function showPdf(Book $book)
+    {
+        if ($book->pdf_file_data) {
+            if (auth()->check()) {
+                auth()->user()->update(['last_read_book_id' => $book->id]);
+            }
+            $pdfData = base64_decode($book->pdf_file_data);
+            return response($pdfData, 200)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="' . ($book->original_pdf_name ?? 'document.pdf') . '"');
+        }
+        abort(404, 'PDF not found.');
     }
 }
