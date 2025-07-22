@@ -427,7 +427,7 @@
                     <div class="user-info">
                         @auth
                             <h5>{{ Auth::user()->name }}</h5>
-                            <p>Welcome!r</p>
+                            <p>Welcome</p>
                         @else
                             <h5>Guest</h5>
                             <p>Please log in</p>

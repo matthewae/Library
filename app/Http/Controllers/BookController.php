@@ -51,7 +51,17 @@ class BookController extends Controller
 
         $pdfPath = null;
         if ($request->hasFile('pdf_file_path')) {
-            $pdfPath = $request->file('pdf_file_path')->store('pdfs', 'public');
+            try {
+                $pdfFile = $request->file('pdf_file_path');
+                $pdfPath = $pdfFile->store('pdfs', 'public');
+                $originalPdfName = $pdfFile->getClientOriginalName();
+            } catch (\Exception $e) {
+                \Log::error('Error saving PDF file: ' . $e->getMessage());
+                $pdfPath = null; // Ensure pdfPath is null if saving fails
+                $originalPdfName = null;
+            }
+        } else {
+            $originalPdfName = null;
         }
 
         $book = Book::create([
@@ -63,6 +73,7 @@ class BookController extends Controller
             'description' => $request->description,
             'cover_image_path' => $coverImagePath,
             'pdf_file_path' => $pdfPath,
+            'original_pdf_name' => $originalPdfName,
             'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
 
@@ -104,11 +115,14 @@ class BookController extends Controller
         }
 
         $pdfPath = $book->pdf_file_path;
+        $originalPdfName = $book->original_pdf_name;
         if ($request->hasFile('pdf_file_path')) {
             if ($pdfPath) {
                 Storage::disk('public')->delete($pdfPath);
             }
-            $pdfPath = $request->file('pdf_file_path')->store('pdfs', 'public');
+            $pdfFile = $request->file('pdf_file_path');
+            $pdfPath = $pdfFile->store('pdfs', 'public');
+            $originalPdfName = $pdfFile->getClientOriginalName();
         }
 
         $book->update([
@@ -120,6 +134,7 @@ class BookController extends Controller
             'description' => $request->description,
             'cover_image_path' => $coverImagePath,
             'pdf_file_path' => $pdfPath,
+            'original_pdf_name' => $originalPdfName,
             'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
 

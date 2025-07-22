@@ -21,6 +21,7 @@ class Book extends Model
         'description',
         'cover_image_path',
         'pdf_file_path',
+        'original_pdf_name',
         'pages',
     ];
 

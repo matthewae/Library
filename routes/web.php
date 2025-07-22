@@ -36,10 +36,11 @@ Route::get('/user/books/{id}', function ($id) {
 Auth::routes();
 
 // Authenticated User Routes
+Route::get('/search-books', [BookSearchController::class, 'search'])->name('search.books');
+
 Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/my-library', [UserController::class, 'myLibrary'])->name('user.my_library');
-    Route::get('/search-books', [BookSearchController::class, 'search'])->name('search.books');
 });
 
 // Admin Routes

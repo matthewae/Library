@@ -31,9 +31,9 @@ class BookCollectionController extends Controller
             $books = Book::where('title', 'like', '%' . $search . '%')->get();
             $otherBooks = collect(); // Kosongkan otherBooks jika ada pencarian
         } else {
-            $books = Book::all();
-            $otherBooks = Book::all();
-        }
-        return view('user.index', compact('books', 'otherBooks'));
+            $books = Book::all(); // Mengambil semua buku
+            $otherBooks = Book::all(); 
+        }   
+        return view('user.index', compact('books', 'otherBooks'));  
     }
 }
