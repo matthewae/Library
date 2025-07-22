@@ -345,6 +345,9 @@
               <span class="input-icon">👤</span>
               <input type="text" id="username" name="username" placeholder="Enter your username" required />
             </div>
+            @error('username')
+            <span class="text-danger" role="alert">{{ $message }}</span>
+            @enderror
           </div>
 
           <div class="form-group">
@@ -354,6 +357,9 @@
               <input type="password" id="password" name="password" placeholder="Enter your password" required />
               <span class="input-icon password-toggle" onclick="togglePasswordVisibility()">👁️</span>
             </div>
+            @error('password')
+            <span class="text-danger" role="alert">{{ $message }}</span>
+            @enderror
           </div>
 
           <button type="submit" class="login-button">Login</button>
@@ -385,3 +391,5 @@
 </body>
 
 </html>
+            </div>
+          </div>

@@ -116,7 +116,25 @@
       font-weight: 600;
     }
 
-    .login-link a:hover {
+    .login-link a:hover {}
+
+    .text-danger {
+      color: #dc3545;
+      font-size: 0.875em;
+      margin-top: 5px;
+      text-align: left;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      cursor: pointer;
+      color: #000;
+    }
       color: var(--primary-color);
     }
 
@@ -221,6 +239,7 @@
         <div class="input-wrapper">
           <span class="input-icon">🔒</span>
           <input type="password" id="password" name="password" placeholder="Enter your password" required />
+          <span class="toggle-password" onclick="togglePasswordVisibility('password')">👁️</span>
         </div>
         @error('password')
         <span class="text-danger" role="alert">{{ $message }}</span>
@@ -232,7 +251,11 @@
         <div class="input-wrapper">
           <span class="input-icon">🔒</span>
           <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password" required />
+          <span class="toggle-password" onclick="togglePasswordVisibility('password_confirmation')">👁️</span>
         </div>
+        @error('password_confirmation')
+        <span class="text-danger" role="alert">{{ $message }}</span>
+        @enderror
       </div>
 
       <button type="submit" class="register-button">Register</button>
@@ -247,5 +270,31 @@
     </p>
   </div>
 </body>
+<script>
+  function togglePasswordVisibility(id) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+      input.type = "text";
+    } else {
+      input.type = "password";
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('password_confirmation');
+
+    function validatePasswordConfirmation() {
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordInput.setCustomValidity('Passwords do not match');
+      } else {
+        confirmPasswordInput.setCustomValidity('');
+      }
+    }
+
+    passwordInput.addEventListener('change', validatePasswordConfirmation);
+    confirmPasswordInput.addEventListener('keyup', validatePasswordConfirmation);
+  });
+</script>
 
 </html>
