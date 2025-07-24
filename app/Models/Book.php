@@ -19,9 +19,10 @@ class Book extends Model
         'publisher',
         'publication_year',
         'description',
-        'cover_image_data',
+        'cover_image_data', 
         'original_cover_name',
-        'pdf_file_data',
+        'pdf_file_path',
+        'original_pdf_name',
         'pages',
     ];
 
@@ -29,44 +30,37 @@ class Book extends Model
         'pages' => 'array',
     ];
 
+    // Relasi ke kategori
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
+    // Relasi ke user yang memfavoritkan buku ini
     public function favoritedBy(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'favorites', 'book_id', 'user_id')->withTimestamps();
     }
 
+    // Relasi ke riwayat download
     public function downloads(): HasMany
     {
         return $this->hasMany(Download::class);
     }
 
+    // Akses URL untuk cover image
     public function getCoverImageUrlAttribute(): string
     {
-        if ($this->cover_image_data) {
-            return 'data:image/jpeg;base64,' . $this->cover_image_data;
-        }
-        return asset('images/book.png'); // Default image if no cover
+        return $this->cover_image_data
+            ? asset('storage/covers/' . $this->cover_image_data)
+            : asset('images/book.png');
     }
 
-    public function setCoverImageDataAttribute($value)
+    // Akses URL untuk PDF file (optional, jika diperlukan)
+    public function getPdfUrlAttribute(): ?string
     {
-        if ($value && !str_starts_with($value, 'data:image')) {
-            $this->attributes['cover_image_data'] = base64_encode($value);
-        } else {
-            $this->attributes['cover_image_data'] = $value;
-        }
-    }
-
-    public function setPdfFileDataAttribute($value)
-    {
-        if ($value && !str_starts_with($value, '%PDF-')) {
-            $this->attributes['pdf_file_data'] = base64_encode($value);
-        } else {
-            $this->attributes['pdf_file_data'] = $value;
-        }
+        return $this->pdf_file_path
+            ? asset('storage/pdfs/' . $this->pdf_file_path)
+            : null;
     }
 }

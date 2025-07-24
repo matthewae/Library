@@ -3,33 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $books = Book::with('category')->paginate(10);
         return view('admin.books', compact('books'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $categories = \App\Models\Category::all();
+        $categories = Category::all();
         return view('admin.books.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -48,16 +40,24 @@ class BookController extends Controller
         $originalCoverName = null;
         if ($request->hasFile('cover_image')) {
             $coverFile = $request->file('cover_image');
-            $coverImageData = file_get_contents($coverFile->getRealPath());
             $originalCoverName = $coverFile->getClientOriginalName();
+            $coverFileName = time() . '_' . $originalCoverName;
+
+            // Simpan file ke storage/app/public/covers
+            $coverFile->storeAs('public/covers', $coverFileName);
+
+            // Simpan hanya nama file-nya
+            $coverImageData = $coverFileName;
         }
 
-        $pdfFileData = null;
+        $pdfFilePath = null;
         $originalPdfName = null;
         if ($request->hasFile('pdf_file_path')) {
             $pdfFile = $request->file('pdf_file_path');
-            $pdfFileData = file_get_contents($pdfFile->getRealPath());
             $originalPdfName = $pdfFile->getClientOriginalName();
+            $pdfFileName = time() . '_' . $originalPdfName;
+            $pdfFile->storeAs('public/pdfs', $pdfFileName);
+            $pdfFilePath = $pdfFileName;
         }
 
         $book = Book::create([
@@ -69,7 +69,7 @@ class BookController extends Controller
             'description' => $request->description,
             'cover_image_data' => $coverImageData,
             'original_cover_name' => $originalCoverName,
-            'pdf_file_data' => $pdfFileData,
+            'pdf_file_path' => $pdfFilePath,
             'original_pdf_name' => $originalPdfName,
             'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
@@ -77,18 +77,11 @@ class BookController extends Controller
         return redirect()->route('admin.books.index')->with('success', 'Book created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Book $book)
     {
-
         return view('user.show', compact('book'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Book $book)
     {
         $request->validate([
@@ -105,18 +98,33 @@ class BookController extends Controller
 
         $coverImageData = $book->cover_image_data;
         $originalCoverName = $book->original_cover_name;
+
         if ($request->hasFile('cover_image')) {
+            // Hapus file lama jika ada
+            if ($book->cover_image_data && Storage::disk('public')->exists('covers/' . $book->cover_image_data)) {
+                Storage::disk('public')->delete('covers/' . $book->cover_image_data);
+                Log::info('Deleted old cover image: ' . $book->cover_image_data);
+            }
+
             $coverFile = $request->file('cover_image');
-            $coverImageData = file_get_contents($coverFile->getRealPath());
             $originalCoverName = $coverFile->getClientOriginalName();
+            $coverFileName = time() . '_' . $originalCoverName;
+            $coverFile->storeAs('covers', $coverFileName);
+            $coverImageData = $coverFileName;
         }
 
-        $pdfFileData = $book->pdf_file_data;
+        $pdfFilePath = $book->pdf_file_path;
         $originalPdfName = $book->original_pdf_name;
         if ($request->hasFile('pdf_file_path')) {
+            if ($book->pdf_file_path && Storage::disk('public')->exists('pdfs/' . $book->pdf_file_path)) {
+                Storage::disk('public')->delete('pdfs/' . $book->pdf_file_path);
+                Log::info('Deleted old PDF file: ' . $book->pdf_file_path);
+            }
             $pdfFile = $request->file('pdf_file_path');
-            $pdfFileData = file_get_contents($pdfFile->getRealPath());
             $originalPdfName = $pdfFile->getClientOriginalName();
+            $pdfFileName = time() . '_' . $originalPdfName;
+            $pdfFile->storeAs('pdfs', $pdfFileName);
+            $pdfFilePath = $pdfFileName;
         }
 
         $book->update([
@@ -128,7 +136,7 @@ class BookController extends Controller
             'description' => $request->description,
             'cover_image_data' => $coverImageData,
             'original_cover_name' => $originalCoverName,
-            'pdf_file_data' => $pdfFileData,
+            'pdf_file_path' => $pdfFilePath,
             'original_pdf_name' => $originalPdfName,
             'pages' => $request->pages ? ['count' => (int)$request->pages] : null,
         ]);
@@ -136,9 +144,6 @@ class BookController extends Controller
         return response()->json($book);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Book $book)
     {
         $book->delete();
@@ -147,15 +152,25 @@ class BookController extends Controller
 
     public function showPdf(Book $book)
     {
-        if ($book->pdf_file_data) {
+        if ($book->pdf_file_path) {
             if (auth()->check()) {
                 auth()->user()->update(['last_read_book_id' => $book->id]);
             }
-            $pdfData = base64_decode($book->pdf_file_data);
+
+            $pdfPath = 'pdfs/' . $book->pdf_file_path;
+
+            if (!Storage::disk('public')->exists($pdfPath)) {
+                Log::error('PDF file not found: ' . $pdfPath);
+                abort(404, 'PDF file not found.');
+            }
+
+            $pdfData = Storage::disk('public')->get($pdfPath);
+
             return response($pdfData, 200)
                 ->header('Content-Type', 'application/pdf')
                 ->header('Content-Disposition', 'inline; filename="' . ($book->original_pdf_name ?? 'document.pdf') . '"');
         }
+
         abort(404, 'PDF not found.');
     }
 }

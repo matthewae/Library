@@ -21,7 +21,8 @@ return new class extends Migration
             $table->text('description');
             $table->longText('cover_image_data')->nullable();
             $table->string('original_cover_name')->nullable();
-            $table->longText('pdf_file_data')->nullable();
+            $table->string('pdf_file_path')->nullable();
+            $table->string('original_pdf_name')->nullable();
             $table->json('pages')->nullable();
             $table->timestamps();
         });
@@ -34,7 +35,7 @@ return new class extends Migration
     {
         Schema::table('books', function (Blueprint $table) {
             $table->dropForeign(['category_id']);
-            $table->dropColumn(['cover_image_data', 'original_cover_name', 'pdf_file_data']);
+            $table->dropColumn(['cover_image_data', 'original_cover_name', 'pdf_file_path', 'original_pdf_name']);
         });
     }
 
