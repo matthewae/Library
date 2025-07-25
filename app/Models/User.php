@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,10 +20,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
+        'email',
         'password',
-        'remember_token',
-        'role',
-        'last_read_book_id',
     ];
 
     /**
@@ -32,8 +30,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'email_verified_at',
-        'email',
+        'password',
+        'remember_token',
     ];
 
     /**
@@ -43,26 +41,6 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'string',
+
     ];
-
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
-
-    public function downloads()
-    {
-        return $this->hasMany(Download::class);
-    }
-
-    public function favoriteBooks()
-    {
-        return $this->belongsToMany(Book::class, 'favorites', 'user_id', 'book_id');
-    }
-
-    public function lastReadBook()
-    {
-        return $this->belongsTo(Book::class, 'last_read_book_id');
-    }
 }

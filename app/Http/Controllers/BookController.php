@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
@@ -42,11 +42,7 @@ class BookController extends Controller
             $coverFile = $request->file('cover_image');
             $originalCoverName = $coverFile->getClientOriginalName();
             $coverFileName = time() . '_' . $originalCoverName;
-
-            // Simpan file ke storage/app/public/covers
             $coverFile->storeAs('public/covers', $coverFileName);
-
-            // Simpan hanya nama file-nya
             $coverImageData = $coverFileName;
         }
 
@@ -56,7 +52,7 @@ class BookController extends Controller
             $pdfFile = $request->file('pdf_file_path');
             $originalPdfName = $pdfFile->getClientOriginalName();
             $pdfFileName = time() . '_' . $originalPdfName;
-            $pdfFile->storeAs('public/pdfs', $pdfFileName);
+            Storage::disk('public')->putFileAs('pdfs', $pdfFile, $pdfFileName);
             $pdfFilePath = $pdfFileName;
         }
 
@@ -100,30 +96,29 @@ class BookController extends Controller
         $originalCoverName = $book->original_cover_name;
 
         if ($request->hasFile('cover_image')) {
-            // Hapus file lama jika ada
             if ($book->cover_image_data && Storage::disk('public')->exists('covers/' . $book->cover_image_data)) {
                 Storage::disk('public')->delete('covers/' . $book->cover_image_data);
-                Log::info('Deleted old cover image: ' . $book->cover_image_data);
             }
 
             $coverFile = $request->file('cover_image');
             $originalCoverName = $coverFile->getClientOriginalName();
             $coverFileName = time() . '_' . $originalCoverName;
-            $coverFile->storeAs('covers', $coverFileName);
+            $coverFile->storeAs('public/covers', $coverFileName);
             $coverImageData = $coverFileName;
         }
 
         $pdfFilePath = $book->pdf_file_path;
         $originalPdfName = $book->original_pdf_name;
+
         if ($request->hasFile('pdf_file_path')) {
             if ($book->pdf_file_path && Storage::disk('public')->exists('pdfs/' . $book->pdf_file_path)) {
                 Storage::disk('public')->delete('pdfs/' . $book->pdf_file_path);
-                Log::info('Deleted old PDF file: ' . $book->pdf_file_path);
             }
+
             $pdfFile = $request->file('pdf_file_path');
             $originalPdfName = $pdfFile->getClientOriginalName();
             $pdfFileName = time() . '_' . $originalPdfName;
-            $pdfFile->storeAs('pdfs', $pdfFileName);
+            Storage::disk('public')->putFileAs('pdfs', $pdfFile, $pdfFileName);
             $pdfFilePath = $pdfFileName;
         }
 
@@ -146,31 +141,46 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
+        if ($book->cover_image_data && Storage::disk('public')->exists('covers/' . $book->cover_image_data)) {
+            Storage::disk('public')->delete('covers/' . $book->cover_image_data);
+        }
+
+        if ($book->pdf_file_path && Storage::disk('public')->exists('pdfs/' . $book->pdf_file_path)) {
+            Storage::disk('public')->delete('pdfs/' . $book->pdf_file_path);
+        }
+
         $book->delete();
         return response()->json(null, 204);
     }
 
-    public function showPdf(Book $book)
+    public function showPdf($id)
     {
-        if ($book->pdf_file_path) {
-            if (auth()->check()) {
-                auth()->user()->update(['last_read_book_id' => $book->id]);
-            }
+        $book = Book::findOrFail($id);
 
-            $pdfPath = 'pdfs/' . $book->pdf_file_path;
+        Log::info('Book ID: ' . $book->id . ', PDF file path from DB: ' . $book->pdf_file_path);
 
-            if (!Storage::disk('public')->exists($pdfPath)) {
-                Log::error('PDF file not found: ' . $pdfPath);
-                abort(404, 'PDF file not found.');
-            }
-
-            $pdfData = Storage::disk('public')->get($pdfPath);
-
-            return response($pdfData, 200)
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'inline; filename="' . ($book->original_pdf_name ?? 'document.pdf') . '"');
+        if (!$book->pdf_file_path) {
+            Log::error('No PDF file path found for book ID: ' . $book->id);
+            abort(404, 'PDF not found.');
         }
 
-        abort(404, 'PDF not found.');
+        if (auth()->check()) {
+            auth()->user()->update(['last_read_book_id' => $book->id]);
+        }
+
+        $pdfFileName = $book->pdf_file_path;
+        $storagePath = 'pdfs/' . $pdfFileName;
+
+        if (Storage::disk('public')->exists($storagePath)) {
+            return Storage::disk('public')->response($storagePath);
+        }
+
+        $fallbackPath = public_path('storage/pdfs/' . $pdfFileName);
+        if (file_exists($fallbackPath)) {
+            return response()->file($fallbackPath);
+        }
+
+        Log::error('PDF file not found: ' . $storagePath);
+        abort(404, 'PDF file not found.');
     }
 }

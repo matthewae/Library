@@ -180,7 +180,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
                     Back to Library
                 </a>
-                <a href="{{ route('books.pdf', ['id' => $book->id]) }}" target="_blank" class="read-button">
+                <a href="{{ route('books.pdf', ['book' => $book->id]) }}" target="_blank" class="read-button">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7.58 4.5 4 8.08 4 12.5c0 3.81 2.97 6.95 6.79 7.44L12 22l1.21-2.06c3.82-.49 6.79-3.63 6.79-7.44 0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM11 9h2v5h-2z"/></svg>
                     Read Book
                 </a>
