@@ -200,6 +200,42 @@
             box-shadow: 0 10px 30px var(--shadow-medium); /* Stronger shadow */
         }
 
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+
+            .search-bar {
+                width: 100%;
+                max-width: none;
+                margin-top: 15px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 15px;
+            }
+
+            .shelf {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .book-item {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+        }
+
         .book-item:hover {
             transform: translateY(-12px); /* More pronounced lift on hover */
             box-shadow: 0 15px 40px var(--shadow-strong); /* Even stronger shadow on hover */
@@ -269,7 +305,7 @@
                 @else
                     @foreach ($books as $book)
                         <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
-                            <img src="{{ asset('storage/' . $book->cover_image_path) }}" alt="{{ $book->title }} Cover">
+                            <img src="{{ route('books.cover', $book->id) }}" alt="{{ $book->title }} Cover">
                             <p>{{ $book->title }}</p>
                         </a>
                     @endforeach

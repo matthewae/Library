@@ -18,6 +18,7 @@ Route::get('/', [BookCollectionController::class, 'homeIndex'])->name('user.inde
 Route::get('/books', [BookCollectionController::class, 'index'])->name('user.books');
 Route::get('/user/books/{book}', [BookController::class, 'show'])->name('user.show');
 Route::get('/books/{book}/pdf', [BookController::class, 'showPdf'])->name('books.pdf');
+Route::get('/books/{book}/cover', [BookController::class, 'showCover'])->name('books.cover');
 
 // Authentication
 Auth::routes();
@@ -27,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/my-library', [UserController::class, 'myLibrary'])->name('user.my_library');
     Route::get('/search-books', [BookSearchController::class, 'search'])->name('search.books');
+    Route::post('/books/{book}/favorite', [BookController::class, 'favorite'])->name('books.favorite');
 });
 
 // Admin Routes

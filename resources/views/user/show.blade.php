@@ -155,7 +155,7 @@
 </head>
 <body>
     <div class="book-detail-container" id="bookDetailContainer">
-        <img src="{{ $book->cover_image_url }}" alt="Book Cover" class="book-cover-large">
+        <img src="{{ route('books.cover', $book->id) }}" alt="Book Cover" class="book-cover-large">
         <div class="book-info">
             <h1>{{ $book->title }}</h1>
             <h2>{{ $book->author }}</h2>
@@ -184,11 +184,61 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 4.5C7.58 4.5 4 8.08 4 12.5c0 3.81 2.97 6.95 6.79 7.44L12 22l1.21-2.06c3.82-.49 6.79-3.63 6.79-7.44 0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM11 9h2v5h-2z"/></svg>
                     Read Book
                 </a>
+                <form action="{{ route('books.favorite', $book->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="read-button" style="background-color: #007bff;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        Add Favorite
+                    </button>
+                </form>
             </div>
 
         </div>
     </div>
     </div>
+
+    <style>
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .book-detail-container {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .book-cover-large {
+                width: 100%;
+                max-width: 250px;
+                height: auto;
+                margin: 0 auto;
+            }
+
+            .book-info h1 {
+                font-size: 28px;
+            }
+
+            .book-info h2 {
+                font-size: 20px;
+            }
+
+            .book-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            div[style="display: flex; gap: 15px; margin-top: 30px;"] {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .back-button,
+            .read-button,
+            .read-button[style*="background-color: #007bff"] {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 
 
 </body>

@@ -169,7 +169,7 @@
     @media (max-width: 768px) {
       .register-container {
         padding: 30px 20px;
-        margin: 20px;
+        margin: 20px auto;
       }
 
       .register-title {

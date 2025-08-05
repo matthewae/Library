@@ -199,6 +199,46 @@
             background-color: #E65A5A; /* Slightly darker primary color on hover */
         }
 
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
+                padding: 15px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+
+            .header-right {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .search-bar {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .book-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .book-card {
+                width: 100%;
+            }
+        }
+
         .main-content {
             flex-grow: 1;
             margin-left: 250px; /* Offset for fixed sidebar */
@@ -393,9 +433,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 12v1c0 1.1-.9 2-2 2H6.41L11 19.59 9.59 21 3 14.41V12c0-1.1 .9-2 2-2h14c1.1 0 2 .9 2 2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                            News
+                        <a href="{{ route('user.books') }}" class="{{ Request::is('books') ? 'active' : '' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                            All Books
                         </a>
                     </li>
                 </ul>
@@ -453,8 +493,8 @@
             </div>
             <div class="shelf">
                 @forelse($savedBooks as $book)
-                    <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
-                        <img src="{{ $book->cover_url }}" alt="Book Cover">
+                    <a href="{{ route('user.show', $book) }}" class="book-item">
+                        <img src="{{ route('books.cover', $book->id) }}" alt="{{ $book->title }} Cover">
                         <p>{{ $book->title }}</p>
                     </a>
                 @empty

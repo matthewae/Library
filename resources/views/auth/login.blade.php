@@ -280,8 +280,12 @@
       .left-section,
       .right-section {
         width: 100%;
-        padding: 30px;
+        padding: 30px 20px;
         text-align: center;
+      }
+
+      .login-container {
+        margin: 20px;
       }
 
       .search-bar {

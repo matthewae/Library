@@ -371,6 +371,53 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-light);
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
+                padding: 15px;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+                width: 100%;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 20px;
+            }
+
+            .search-bar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .book-item {
+                width: calc(50% - 15px); /* Two items per row */
+            }
+
+            .shelf {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .book-item {
+                width: 100%; /* One item per row */
+            }
+        }
     </style>
 </head>
 <body>
@@ -400,12 +447,7 @@
                             All Books
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 12v1c0 1.1-.9 2-2 2H6.41L11 19.59 9.59 21 3 14.41V12c0-1.1 .9-2 2-2h14c1.1 0 2 .9 2 2zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-                            News
-                        </a>
-                    </li>
+
                 </ul>
             </nav>
 
@@ -451,7 +493,7 @@
             </div>
             <div class="shelf">
                 @forelse($books as $book)
-                    <a href="{{ route('user.show', ['id' => $book->id]) }}" class="book-item">
+                    <a href="{{ route('user.show', ['book' => $book->id]) }}" class="book-item">
                         <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }} Cover">
                         <p>{{ $book->title }}</p>
                     </a>

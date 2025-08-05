@@ -467,7 +467,7 @@
                 <div class="shelf">
                     @foreach($books as $book)
                     <a href="{{ route('user.show', ['book' => $book->id]) }}" class="book-item">
-                        <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }} Cover">
+                        <img src="{{ $book->cover_image_url }}" alt="{{ $book->title }}">
                         <p>{{ $book->title }}</p>
                     </a>
                     @endforeach

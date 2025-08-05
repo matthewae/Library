@@ -13,6 +13,7 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::with('category')->paginate(10);
+        dd($books); // Temporarily dump data to check
         return view('admin.books', compact('books'));
     }
 
@@ -183,4 +184,75 @@ class BookController extends Controller
         Log::error('PDF file not found: ' . $storagePath);
         abort(404, 'PDF file not found.');
     }
+
+    public function showCover($id)
+    {
+        $book = Book::findOrFail($id);
+
+        Log::info('Book ID: ' . $book->id . ', Cover image path from DB: ' . $book->cover_image_data);
+
+        if (!$book->cover_image_data) {
+            Log::error('No cover image data found for book ID: ' . $book->id);
+            abort(404, 'Cover image not found.');
+        }
+
+        $coverFileName = $book->cover_image_data;
+        $storagePath = 'covers/' . $coverFileName;
+
+        if (Storage::disk('public')->exists($storagePath)) {
+            return Storage::disk('public')->response($storagePath);
+        }
+
+        $fallbackPath = public_path('storage/covers/' . $coverFileName);
+        if (file_exists($fallbackPath)) {
+            return response()->file($fallbackPath);
+        }
+
+        Log::error('Cover image file not found: ' . $storagePath);
+        abort(404, 'Cover image file not found.');
+    }
+
+    public function favorite(Book $book)
+    {
+        $user = auth()->user();
+
+        if ($user->favorites()->where('book_id', $book->id)->exists()) {
+            return back()->with('error', 'Book is already in your favorites.');
+        }
+
+        $user->favorites()->attach($book->id);
+
+        return back()->with('success', 'Book added to favorites!');
+    }
+
+        if (Storage::disk('public')->exists($storagePath)) {
+            return Storage::disk('public')->response($storagePath);
+        }
+
+        $fallbackPath = public_path('storage/covers/' . $coverFileName);
+        if (file_exists($fallbackPath)) {
+            return response()->file($fallbackPath);
+        }
+
+        Log::error('Cover image file not found: ' . $storagePath);
+        abort(404, 'Cover image file not found.');
+    }
+
+    public function favorite(Request $request, Book $book)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return redirect()->back()->with('error', 'You must be logged in to add favorites.');
+        }
+
+        if ($user->favorites()->where('book_id', $book->id)->exists()) {
+            return redirect()->back()->with('info', 'Book is already in your favorites.');
+        }
+
+        $user->favorites()->create(['book_id' => $book->id]);
+
+        return redirect()->back()->with('success', 'Book added to favorites successfully!');
+    }
+
 }
