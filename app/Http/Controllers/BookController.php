@@ -13,7 +13,7 @@ class BookController extends Controller
     public function index()
     {
         $books = Book::with('category')->paginate(10);
-        dd($books); // Temporarily dump data to check
+        // Temporarily dump data to check
         return view('admin.books', compact('books'));
     }
 
@@ -225,34 +225,5 @@ class BookController extends Controller
         return back()->with('success', 'Book added to favorites!');
     }
 
-        if (Storage::disk('public')->exists($storagePath)) {
-            return Storage::disk('public')->response($storagePath);
-        }
-
-        $fallbackPath = public_path('storage/covers/' . $coverFileName);
-        if (file_exists($fallbackPath)) {
-            return response()->file($fallbackPath);
-        }
-
-        Log::error('Cover image file not found: ' . $storagePath);
-        abort(404, 'Cover image file not found.');
-    }
-
-    public function favorite(Request $request, Book $book)
-    {
-        $user = $request->user();
-
-        if (!$user) {
-            return redirect()->back()->with('error', 'You must be logged in to add favorites.');
-        }
-
-        if ($user->favorites()->where('book_id', $book->id)->exists()) {
-            return redirect()->back()->with('info', 'Book is already in your favorites.');
-        }
-
-        $user->favorites()->create(['book_id' => $book->id]);
-
-        return redirect()->back()->with('success', 'Book added to favorites successfully!');
-    }
 
 }
